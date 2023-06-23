@@ -68,7 +68,9 @@ class Attention(nn.Module):
         q, k, v = self.to_qkv(x).chunk(3, dim = -1)
         q, k, v = map(lambda t: rearrange(t, 'b n (h d) -> (b h) n d', h = h), (q, k, v))
 
-        q *= self.scale
+        # q *= self.scale                #commented only bcoz inplace not working in flops calculation
+        tempq = q* self.scale           #using this only for flops calucation
+        q = tempq
 
         # splice out classification token at index 1
         (cls_q, q_), (cls_k, k_), (cls_v, v_) = map(lambda t: (t[:, 0:1], t[:, 1:]), (q, k, v))

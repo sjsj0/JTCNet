@@ -80,7 +80,9 @@ class Attention(nn.Module):
         q, k, v = map(lambda t: rearrange(
             t, 'b n (h d) -> (b h) n d', h=h), (q, k, v))
 
-        q *= self.scale
+        # q *= self.scale                #commented only bcoz inplace not working in flops calculation
+        tempq = q * self.scale  # using this only for flops calucation
+        q = tempq
 
         # splice out classification token at index 1
         (cls_q, q_), (cls_k, k_), (cls_v, v_) = map(
@@ -487,6 +489,11 @@ class TimeSformer_BVP(nn.Module):
 
         # combinedFeatures = torch.cat((tfr_features, BVP_features_128),1)
         # print(combinedFeatures.shape)
+
+        ## only for floops calculation....
+        # BVP_features_128 = torch.reshape(BVP_features_128, (1,128))
+
+
         return signals, self.mlp_layers(torch.cat((tfr_features, BVP_features_128), 1))
 
 

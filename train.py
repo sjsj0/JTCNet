@@ -67,6 +67,7 @@ if __name__ == '__main__':
         print('on GPU')
     else:
         print('on CPU')
+        device=None
 
     ##################################################################################################
 
@@ -178,6 +179,8 @@ if __name__ == '__main__':
             # TRANSFORMER_BVP
             ########################################################
             tf_bvp_optimizer.zero_grad()
+            print("STMap shape:" ,STMap.shape)
+            print("image shape:" ,image.shape)
             Wave_pr, HR_pr = tf_bvp_model(video=image, x_Unet=STMap)
             # print(Wave_pr.shape)
             # print(HR_pr.shape)
